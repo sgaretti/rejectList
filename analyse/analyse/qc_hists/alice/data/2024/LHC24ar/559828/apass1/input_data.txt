@@ -1,5 +1,0 @@
-alien:///alice/data/2024/LHC24ar/559828/apass1/0040/QC/QC.root
-alien:///alice/data/2024/LHC24ar/559828/apass1/0050/QC/QC.root
-alien:///alice/data/2024/LHC24ar/559828/apass1/0100/QC/QC.root
-alien:///alice/data/2024/LHC24ar/559828/apass1/0110/QC/QC.root
-alien:///alice/data/2024/LHC24ar/559828/apass1/0120/QC/QC.root

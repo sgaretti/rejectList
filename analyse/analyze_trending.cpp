@@ -187,14 +187,14 @@ void analyze_trending(int flag=0)
   std::map<int, std::vector<int>> deIdsPerChamber{};
   deIdsPerChamber[1] = {100, 101, 102, 103};
   deIdsPerChamber[2] = {200, 201, 202, 203};
-  //deIdsPerChamber[3] = {300, 301, 302, 303};
-  //deIdsPerChamber[4] = {400, 401, 402, 403};
-  //deIdsPerChamber[5] = {500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517};
-  //deIdsPerChamber[6] = {600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617};
-  //deIdsPerChamber[7] = {700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725};
-  //deIdsPerChamber[8] = {800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825};
-  //deIdsPerChamber[9] = {900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 923, 924, 925};
-  //deIdsPerChamber[10] = {1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023, 1024, 1025};
+  deIdsPerChamber[3] = {300, 301, 302, 303};
+  deIdsPerChamber[4] = {400, 401, 402, 403};
+  deIdsPerChamber[5] = {500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517};
+  deIdsPerChamber[6] = {600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617};
+  deIdsPerChamber[7] = {700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725};
+  deIdsPerChamber[8] = {800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825};
+  deIdsPerChamber[9] = {900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 923, 924, 925};
+  deIdsPerChamber[10] = {1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023, 1024, 1025};
 
   // input file list
   std::vector<std::string> flist;
@@ -376,6 +376,65 @@ printf("\n Normalizing per distribution \n");
       }
     }
   }
+  
+
+//------------------------------------------------------------
+// SAVE DS PROJECTIONS *BEFORE* NORMALIZATION BY LUMI
+//------------------------------------------------------------
+std::cout << "\n>>> Saving DS projections BEFORE normalize-by-lumi...\n";
+
+auto* foutPre = new TFile("./figures/projections/preLumi_projections.root", "RECREATE");
+gSystem->Exec("mkdir -p ./figures/projections");
+auto* cProjPre = new TCanvas("cProjPre", "PreLumi Projections", 5000, 3000);
+TString pdfPreOut = "./figures/projections/preLumi_projections.pdf";
+bool firstPagePre = true;
+
+std::vector<int> dsBending  = {2296, 2319};
+std::vector<int> dsNonBend  = {758, 898};
+
+for (auto& [chId, deIds] : deIdsPerChamber) {
+  for (auto deId : deIds) {
+    // ---- BENDING ----
+    auto* hTrendDSperDE_B = mapTrendsPerDE.at(Form("hTrendDSperDE%dB", deId));
+    for (int ds : dsBending) {
+      int binY_B  = hTrendDSperDE_B->GetYaxis()->FindBin(ds);
+      auto* projB = hTrendDSperDE_B->ProjectionX(Form("proj_preLumi_DE%d_DS%d_B", deId, ds), binY_B, binY_B);
+      projB->SetTitle(Form("DE%d DS%d Bending (preLumi);Run index;Counts", deId, ds));
+      foutPre->cd();
+      projB->Write();
+      cProjPre->cd();
+      projB->SetLineWidth(2);
+      projB->Draw("hist");
+      if (firstPagePre) {
+        cProjPre->Print(pdfPreOut + "(", Form("Title: DE%d_DS%d_B_preLumi", deId, ds));
+        firstPagePre = false;
+      } else {
+        cProjPre->Print(pdfPreOut, Form("Title: DE%d_DS%d_B_preLumi", deId, ds));
+      }
+    }
+
+    // ---- NON-BENDING ----
+    auto* hTrendDSperDE_NB = mapTrendsPerDE.at(Form("hTrendDSperDE%dNB", deId));
+    for (int ds : dsNonBend) {
+      int binY_NB  = hTrendDSperDE_NB->GetYaxis()->FindBin(ds);
+      auto* projNB = hTrendDSperDE_NB->ProjectionX(Form("proj_preLumi_DE%d_DS%d_NB", deId, ds), binY_NB, binY_NB);
+      projNB->SetTitle(Form("DE%d DS%d Non-Bending (preLumi);Run index;Counts", deId, ds));
+      foutPre->cd();
+      projNB->Write();
+      cProjPre->cd();
+      projNB->SetLineWidth(2);
+      projNB->Draw("hist");
+      cProjPre->Print(pdfPreOut, Form("Title: DE%d_DS%d_NB_preLumi", deId, ds));
+    }
+  }
+}
+
+cProjPre->Print(pdfPreOut + ")", "Title: End");
+foutPre->Close();
+printf("\nPre-lumi projections saved successfully to %s\n", pdfPreOut.Data());
+
+
+
 
   // normalize by lumi
 printf("\n Normalizing per lumi \n");
@@ -446,8 +505,9 @@ printf("\n ctrend canvas created \n");
   }
   //std::vector<int> dsBending  = {2296, 2319};
   //std::vector<int> dsNonBend  = {1119, 1264};
-  std::vector<int> dsBending  = {2296, 2319};
-  std::vector<int> dsNonBend  = {758, 898};
+  
+  //std::vector<int> dsBending  = {2296, 2319};
+  //std::vector<int> dsNonBend  = {758, 898};
 
   std::cout << "\n>>> Starting DS projections for all DEs...\n";
 
@@ -489,93 +549,63 @@ for (auto& [chId, deIds] : deIdsPerChamber) {
   }
 
   fout->cd();
-  //l_out->Write();
+  l_out->Write();
+
   fout->Write();
-  fout->Close();
 
   printf("\nAll projections saved successfully!\n");
-  fout->cd();
-TString pdfOut = "./figures/projections/all_projections.pdf";
-auto* cProj = new TCanvas("cProj", "Projections", 5000, 3000);
-bool firstPage = true;
 
-for (auto& [chId, deIds] : deIdsPerChamber) {
-  for (auto deId : deIds) {
+  gSystem->Exec("mkdir -p ./figures/projections");
 
-    // ---- BENDING ----
-    for (int ds : dsBending) {
-      TString hname = Form("proj_DE%d_DS%d_B", deId, ds);
-      auto* projB = (TH1D*) fout->Get(hname);
-      if (!projB) {
-        printf("Missing histogram %s\n", hname.Data());
-        continue;
+  // --- closes PDF  ---
+  ctrend->Print(Form("./figures/%s/trending_ds_per_de.pdf)", type.c_str()));
+  gSystem->ProcessEvents();
+
+  // --- creates new multipage PDF ---
+  TString pdfOut = "./figures/projections/all_projections.pdf";
+  auto* cProj = new TCanvas("cProj", "Projections", 5000, 3000);
+  bool firstPage = true;
+
+  for (auto& [chId, deIds] : deIdsPerChamber) {
+    for (auto deId : deIds) {
+      // ---- BENDING ----
+      for (int ds : dsBending) {
+        TString hname = Form("proj_DE%d_DS%d_B", deId, ds);
+        auto* projB = (TH1D*) fout->Get(hname);
+        if (!projB) {
+          printf("Missing histogram %s\n", hname.Data());
+          continue;
+        }
+        cProj->cd();
+        projB->SetLineWidth(2);
+        projB->Draw("hist");
+        if (firstPage) {
+          cProj->Print(pdfOut + "(", Form("Title: DE%d_DS%d_B", deId, ds));
+          firstPage = false;
+        } else {
+          cProj->Print(pdfOut, Form("Title: DE%d_DS%d_B", deId, ds));
+        }
       }
 
-      cProj->cd();
-      projB->SetLineWidth(2);
-      projB->Draw("hist");
-
-      if (firstPage) {
-        cProj->Print(pdfOut + "(", Form("Title: DE%d_DS%d_B", deId, ds)); // apre PDF multipagina
-        firstPage = false;
-      } else {
-        cProj->Print(pdfOut, Form("Title: DE%d_DS%d_B", deId, ds));
+      // ---- NON-BENDING ----
+      for (int ds : dsNonBend) {
+        TString hname = Form("proj_DE%d_DS%d_NB", deId, ds);
+        auto* projNB = (TH1D*) fout->Get(hname);
+        if (!projNB) {
+          printf("Missing histogram %s\n", hname.Data());
+          continue;
+        }
+        cProj->cd();
+        projNB->SetLineWidth(2);
+        projNB->Draw("hist");
+        cProj->Print(pdfOut, Form("Title: DE%d_DS%d_NB", deId, ds));
       }
     }
-
-    printf(" B projections for DE %d done.\n", deId);
-
-    // ---- NON-BENDING ----
-    for (int ds : dsNonBend) {
-      TString hname = Form("proj_DE%d_DS%d_NB", deId, ds);
-      auto* projNB = (TH1D*) fout->Get(hname);
-      if (!projNB) {
-        printf("Missing histogram %s\n", hname.Data());
-        continue;
-      }
-
-      cProj->cd();
-      projNB->SetLineWidth(2);
-      projNB->Draw("hist");
-      cProj->Print(pdfOut, Form("Title: DE%d_DS%d_NB", deId, ds));
-    }
-
-    printf("NB projections for DE %d done.\n", deId);
   }
-}
 
-// Chiudi il PDF multipagina
-cProj->Print(pdfOut + ")", "Title: End");
-printf("\n All projections successfully exported to %s\n", pdfOut.Data());
-/*
-auto* cProjB = new TCanvas("cProjB", "ProjectionsB", 5000, 3000);
-auto* cProjNB = new TCanvas("cProjNB", "ProjectionsNB", 5000, 3000);
-gSystem->Exec("mkdir -p ./figures/projections/");
+  cProj->Print(pdfOut + ")", "Title: End");
+  printf("\nAll projections successfully exported to %s\n", pdfOut.Data());
 
-for (auto& [chId, deIds] : deIdsPerChamber) {
-  for (auto deId : deIds) {
-    for (int ds : dsBending) {
-      cProjB->cd();
-      auto* projB = (TH1D*) fout->Get(Form("proj_DE%d_DS%d_B", deId, ds));
-      if (!projB) continue;
-      projB->Draw("hist");
-      cProjB->Print(Form("./figures/projections/DE%d_DS%d_B.pdf", deId, ds));
-    }
-printf("B done successfully! \n");
-    for (int ds : dsNonBend) {
-      cProjNB->cd();
-      auto* projNB = (TH1D*) fout->Get(Form("proj_DE%d_DS%d_NB", deId, ds));
-      if (!projNB) continue;
-      projNB->Draw("hist");
-      cProjNB->Print(Form("./figures/projections/DE%d_DS%d_NB.pdf", deId, ds));
-    }
-printf("NB done successfully! \n");
-  }
-}*/
-
-  //fout->cd();
-  //l_out->Write();
-  //fout->Write();
   fout->Close();
-  //l_out->Write();
+  printf("\nFile ROOT closed correctly.\n");
 }

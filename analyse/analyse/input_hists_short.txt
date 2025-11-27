@@ -1,9 +1,0 @@
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24ar/559544/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24ar/559545/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24ar/559561/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24ar/560142/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24ar/560162/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24ar/560163/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24as/560229/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24as/560244/apass1_muon/qc.root
-/afs/cern.ch/work/s/sgaretti/rejectList/PbPb/analyse/qc_hists/alice/data/2024/LHC24as/560402/apass1_muon/qc.root
