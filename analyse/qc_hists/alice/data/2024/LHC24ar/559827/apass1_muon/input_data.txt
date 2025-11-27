@@ -1,0 +1,13 @@
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/0000/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/0010/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/0020/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/0030/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2230/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2240/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2250/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2300/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2310/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2320/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2330/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2340/QC/QC.root
+alien:///alice/data/2024/LHC24ar/559827/apass1_muon/2350/QC/QC.root
